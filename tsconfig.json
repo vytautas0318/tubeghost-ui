@@ -14,7 +14,15 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
-    "paths": { "@ui/*": ["src/*"] }
+    "paths": {
+      "@ui/*": ["src/*"],
+      // Point at ONE copy of the SDK — the same one the host apps use.
+      // SupabaseClient is compared nominally (protected members), so a second
+      // copy here would make the host's client fail to satisfy the seam.
+      // Bundlers resolve this from the host's node_modules at build time; this
+      // mapping only exists so `tsc` can typecheck the package standalone.
+      "@supabase/supabase-js": ["../tubeghost-app/node_modules/@supabase/supabase-js"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

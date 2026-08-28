@@ -26,10 +26,30 @@ component that needs one takes it as an optional capability from its host.
 ```
 src/
   components/ui/   Button, Input, Select, Badge, Toggle, …
-  lib/             pure helpers with no app dependencies
+  lib/             data modules (Supabase) + pure helpers
+  platform/        the seams — how the package reaches host capabilities
+  automations/     shared automation types
   styles/          ds-tokens.css — the design tokens both apps share
   index.ts         the package entry point
 ```
+
+## The platform seam
+
+Data modules here talk to Supabase, but each host app builds its own client
+(different session persistence). Rather than import one of them, the host
+registers its getter once at startup:
+
+```ts
+import { setSupabaseGetter } from '@ui'
+import { getSupabase } from './lib/supabase'
+
+setSupabaseGetter(getSupabase)   // before the first render
+```
+
+`@supabase/supabase-js` is a **peerDependency** and this package must not carry
+its own copy: `SupabaseClient` is a class with protected members, so TypeScript
+compares it nominally — a second copy would make the host's real client fail to
+satisfy the seam.
 
 ## Usage
 
