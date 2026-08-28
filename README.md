@@ -1,9 +1,14 @@
 # @tubeghost/ui
 
-UI primitives, design tokens and platform-neutral logic shared by:
+UI primitives, design tokens and platform-neutral logic for TubeGhost.
 
-- **tubeghost-app** — the web app (app.tubeghost.com)
-- **tubeghost-browser-macos** — the TubeGhost Browser desktop app
+**Consumed today by:** `tubeghost-app` — the web app (app.tubeghost.com).
+
+**Designed for both.** Every module here is platform-neutral and the desktop
+app (`tubeghost-browser-macos`) holds byte-identical copies of all of them, so
+it can adopt this package by declaring the same dependency and swapping its
+imports — no code change required. That step is deliberately deferred; the
+desktop app is untouched for now.
 
 ## Why
 
@@ -58,9 +63,15 @@ import { Button, Badge, cn } from '@tubeghost/ui'
 import '@tubeghost/ui/styles/ds-tokens.css'
 ```
 
-Host apps currently consume this by path alias (see each app's `vite.config.ts`
-and `tsconfig.json`), so the original `@/components/ui` import specifiers keep
-working unchanged.
+Consumed as a normal npm dependency:
+
+```json
+"dependencies": { "@tubeghost/ui": "file:../tubeghost-ui" }
+```
+
+The `file:` link makes this behave like a published package while it lives
+beside the app. Once this repo has a remote, only that one line changes — to a
+git or npm URL — and nothing in the importing code moves.
 
 ## Checks
 

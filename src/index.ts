@@ -10,6 +10,7 @@
 
 export * from './components/ui'
 export { cn } from './lib/cn'
+export * from './components/ghost-avatar-parts'
 export * from './lib/proxies-parser'
 
 // Data-layer modules. These talk to Supabase through the seam below, so the
