@@ -63,15 +63,45 @@ import { Button, Badge, cn } from '@tubeghost/ui'
 import '@tubeghost/ui/styles/ds-tokens.css'
 ```
 
-Consumed as a normal npm dependency:
+Consumed as a normal npm dependency, installed straight from this repo:
 
 ```json
-"dependencies": { "@tubeghost/ui": "file:../tubeghost-ui" }
+"dependencies": {
+  "@tubeghost/ui": "git+ssh://git@github.com/vytautas0318/tubeghost-ui.git#<sha>"
+}
 ```
 
-The `file:` link makes this behave like a published package while it lives
-beside the app. Once this repo has a remote, only that one line changes — to a
-git or npm URL — and nothing in the importing code moves.
+Pinned to a commit SHA so builds are reproducible: a branch ref would let a
+deploy months from now silently pick up whatever landed since. Shipping a
+change to a consumer is therefore two steps — push here, then bump the SHA in
+the consumer and `npm install`.
+
+### Access — this repo is PRIVATE
+
+`npm` shells out to `git`, so the fetch uses whatever credentials git has.
+
+**On a developer machine** the usual GitHub SSH key is enough — the same one
+used to clone this repo. Nothing extra to configure.
+
+**In CI (Vercel, GitHub Actions, a DMG build box)** there is no SSH key, so the
+install fails with `Could not read from remote repository`. Two ways to fix it:
+
+1. **Deploy key (preferred).** Generate a keypair, add the public half to this
+   repo's *Deploy keys* (read-only), and give the private half to the builder as
+   an SSH key. Nothing secret ends up in either repo.
+2. **Token URL.** Swap the dependency to
+   `git+https://<TOKEN>@github.com/...`. Simpler, but the token must be injected
+   at build time — never committed.
+
+### Working on this package locally
+
+The SHA pin means edits here do not reach a consumer until they are pushed. To
+iterate with hot reload, point the consumer at the working copy temporarily:
+
+```bash
+npm install ../tubeghost-ui     # local link, instant reload
+npm install                     # restores the pinned git version
+```
 
 ## Checks
 
