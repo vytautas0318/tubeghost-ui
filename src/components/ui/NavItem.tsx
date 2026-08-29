@@ -38,6 +38,13 @@ export function NavItem({
         display: 'flex',
         alignItems: 'center',
         gap: '12px',
+        // A NavItem is often placed in a flex row beside something else (the
+        // sidebar's buy button) and given flex:1 by the caller. Without
+        // minWidth:0 it keeps its content's intrinsic width, so a long label
+        // or a trailing badge widens the row and pushes its neighbour out of
+        // the rail, where the sidebar's overflow:hidden clips it. Callers can
+        // still override via `style`, which spreads after this.
+        minWidth: 0,
         height: '40px',
         padding: '0 11px',
         borderRadius: 'var(--r)',
@@ -80,13 +87,27 @@ export function NavItem({
           {icon}
         </span>
       ) : null}
-      <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+      {/* minWidth:0 is what actually lets the ellipsis engage: a flex item
+          defaults to min-width:auto and refuses to shrink below its own
+          content, so without this a long label (or a label + trailing badge)
+          widens the whole row and pushes anything beside the NavItem out of
+          the rail. flex:1 lets it take the free space and give it back. */}
+      <span
+        style={{
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          minWidth: 0,
+          flex: 1
+        }}
+      >
         {label}
       </span>
       {badge != null ? (
         <span
           style={{
             marginLeft: 'auto',
+            flexShrink: 0,
             fontSize: '9.5px',
             fontWeight: 700,
             letterSpacing: '0.4px',
@@ -104,6 +125,7 @@ export function NavItem({
           title="Needs attention"
           style={{
             marginLeft: 'auto',
+            flexShrink: 0,
             fontSize: '10.5px',
             fontWeight: 700,
             color: 'var(--amber)',
@@ -123,6 +145,7 @@ export function NavItem({
         <span
           style={{
             marginLeft: 'auto',
+            flexShrink: 0,
             width: '8px',
             height: '8px',
             borderRadius: '50%',
@@ -134,6 +157,7 @@ export function NavItem({
         <span
           style={{
             marginLeft: 'auto',
+            flexShrink: 0,
             fontSize: '11.5px',
             fontWeight: 500,
             color: active ? 'var(--sb-t2)' : 'var(--sb-t3)',

@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./styles/ds-tokens.css": "./src/styles/ds-tokens.css"
+    "./styles/ds-tokens.css": "./src/styles/ds-tokens.css",
+    "./styles/ds-base.css": "./src/styles/ds-base.css"
   },
   "peerDependencies": {
     "react": "^19.2.1",

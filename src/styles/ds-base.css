@@ -1,0 +1,36 @@
+/* ============================================================
+   TubeGhost Design System — BASE ELEMENT STYLES
+
+   Element-level rules the design system owns, shipped alongside
+   ds-tokens.css so BOTH apps inherit them from the package rather
+   than keeping their own copy. Tokens stay in ds-tokens.css (vars
+   only); anything that styles a bare element belongs here.
+
+   Import AFTER ds-tokens.css:
+     import '@tubeghost/ui/styles/ds-tokens.css'
+     import '@tubeghost/ui/styles/ds-base.css'
+   ============================================================ */
+
+/* Native <select> renders as an OS widget while appearance:auto, so it
+   paints its own light background and ignores the DS tokens the class
+   list sets — every dropdown stayed white in dark mode. Resetting the
+   appearance hands painting back to CSS; the arrow is re-drawn as an
+   inline SVG background so the control still reads as a dropdown.
+
+   Opt out with .ds-select-native (or any rule that re-sets appearance)
+   for selects that already draw their own arrow. */
+select:not(.ds-select-native) {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888f9a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  padding-right: 22px;
+}
+
+/* The dropdown LIST is painted by the OS, not the page: without an
+   explicit color-scheme it renders light-on-light in dark mode. */
+select,
+option {
+  color-scheme: inherit;
+}
